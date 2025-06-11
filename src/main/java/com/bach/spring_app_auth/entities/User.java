@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -23,9 +25,13 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "El nombre de usuario es obligatorio")
+    @Size(min = 3, max = 60, message = "El nombre del usuario debe contener mas de 3 caracteres")
     private String username;
 
     @Column(nullable = false)
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
