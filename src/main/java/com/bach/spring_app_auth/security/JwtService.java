@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.bach.spring_app_auth.entities.Role;
@@ -26,6 +27,28 @@ public class JwtService {
     public JwtService(SecretKey secretKey){
         this.secretKey = secretKey;
         //this.jwtBuilder = jwtBuilder;
+    }
+    public String extractUsername(String token){
+        return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+    }
+    public boolean isTokenValid(String token, UserDetails userDetails){
+        String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    public boolean isTokenExpired(String token){
+        Date expiration = Jwts.parser()
+                                .verifyWith(secretKey)
+                                .build()
+                                .parseSignedClaims(token)
+                                .getPayload()
+                                .getExpiration();
+        return expiration.before(new Date());
     }
 
     public String generateToken(User user){
@@ -55,3 +78,5 @@ public class JwtService {
     }
    
 }
+//Con estos métodos, el JwtService es capaz de extraer información del token y verificar su validez. Es crucial que la clave secreta utilizada
+// para firmar y verificar el token sea la misma que en la generación del token durante el proceso de login.

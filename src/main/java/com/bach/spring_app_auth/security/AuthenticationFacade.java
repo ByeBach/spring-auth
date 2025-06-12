@@ -19,7 +19,8 @@ public class AuthenticationFacade {
     public User getAuthenticatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("usuario no encontrado"));
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("usuario no encontrado"));
     }
 }
 //Este componente centraliza la lógica para obtener el usuario actual, facilitando su reutilización en diferentes partes de la aplicación.
