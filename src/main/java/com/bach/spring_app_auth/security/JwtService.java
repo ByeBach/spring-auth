@@ -14,17 +14,18 @@ import org.springframework.stereotype.Service;
 import com.bach.spring_app_auth.entities.Role;
 import com.bach.spring_app_auth.entities.User;
 
-import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
 
 
 @Service
 public class JwtService {
-    private final JwtBuilder jwtBuilder;
+    
+    //private final JwtBuilder jwtBuilder;
     private final SecretKey secretKey;
 
-    public JwtService(JwtBuilder jwtBuilder, SecretKey secretKey){
+    public JwtService(SecretKey secretKey){
         this.secretKey = secretKey;
-        this.jwtBuilder = jwtBuilder;
+        //this.jwtBuilder = jwtBuilder;
     }
 
     public String generateToken(User user){
@@ -37,7 +38,7 @@ public class JwtService {
             .map(Role::getName)
             .collect(Collectors.toList()));
 
-            return jwtBuilder
+            return Jwts.builder()
                 //id del usuario
                 .subject(String.valueOf(user.getId()))
                 //la clave secreta para firmar el token y saber que es nuestro cuando lleguen las peticiones del frontend
